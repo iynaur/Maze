@@ -28,7 +28,7 @@ public slots:
 private:
   Ui::MainWindow *ui;
   Maze maze;
-  bool showPath;
+  bool showPath = false;
   int tempWidth;
   int tempHeight;
   const int texSize=20;
