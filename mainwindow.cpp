@@ -62,6 +62,7 @@ void MainWindow::generateNewMaze(){
                     fixX+tempWidth*texSize+fixX+ui->genarate_button->width()+fixX,
                     fixY+tempHeight*texSize+fixY*2);
   update();
+  label->setFocus();
 }
 
 void MainWindow::whetherShowPath(){
