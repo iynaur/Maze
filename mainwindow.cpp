@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  label = new QLabel(this->centralWidget());
+  label->setGeometry(QRect(0, 0, 100, 100));
+  label->setFocusPolicy(Qt::StrongFocus);
+
   connect(ui->genarate_button,SIGNAL(clicked(bool)),this,SLOT(generateNewMaze()));
   connect(ui->findPathCheck,SIGNAL(clicked(bool)),this,SLOT(whetherShowPath()));
   connect(ui->XSlider,SIGNAL(valueChanged(int)),this,SLOT(handleSlider()));
@@ -69,9 +73,17 @@ void MainWindow::whetherShowPath(){
 }
 
 void MainWindow::paintEvent(QPaintEvent *e){
-  QPixmap wallImg(":/image/brick.jpg");
+  QPixmap wallImg(":/image/wall.jpg");
   QPixmap huajige(":/image/smallHJ.png");
-  QPainter painter(this);
+
+  int sizex = texSize*maze.width+2*fixX;
+  int sizey = texSize*maze.height+2*fixY;
+  label->setGeometry(0,0, sizex, sizey);
+  QPixmap pixmap(sizex, sizey);
+  pixmap.fill();
+  label->setPixmap(pixmap);
+  QPixmap *pix = (QPixmap *)label->pixmap();
+  QPainter painter(pix);
   painter.setPen(Qt::green);
   for(int i=0;i<maze.width;++i)
     for(int j=0;j<maze.height;++j){

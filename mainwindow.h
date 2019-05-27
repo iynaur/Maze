@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QtWidgets/QLabel>
 #include "maze.h"
 namespace Ui {
   class MainWindow;
@@ -27,6 +28,7 @@ public slots:
   void generateNewMaze();
 private:
   Ui::MainWindow *ui;
+  QLabel* label;
   Maze maze;
   bool showPath = false;
   int tempWidth;

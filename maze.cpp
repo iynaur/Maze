@@ -288,6 +288,8 @@ void Maze::findPath(){
     }
 
     //////////////////////////////
+
+    if (visited.empty()) return;
     Point travel=visited.at(visited.size()-1).location;
     Point lastTravel=endPoint;
     while(travel!=currentPoint){
