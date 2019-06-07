@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -15,17 +15,16 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->XSlider,SIGNAL(valueChanged(int)),this,SLOT(handleSlider()));
   connect(ui->YSlider,SIGNAL(valueChanged(int)),this,SLOT(handleSlider()));
   this->setFocus();
-  int tempHeight=15;
-  int tempWidth=21;
+
   ui->XSlider->setValue(11);
   ui->YSlider->setValue(8);
-  ui->label->setText(tr("宽:")+QString::number(tempWidth)+tr("*高:")+QString::number(tempHeight));
+  handleSlider();
   generateNewMaze();
 }
 void MainWindow::handleSlider(){
   tempWidth=ui->XSlider->value()*2-1;
   tempHeight=ui->YSlider->value()*2-1;
-  ui->label->setText(tr("宽:")+QString::number(tempWidth)+tr("*高:")+QString::number(tempHeight));
+  ui->label->setText(QStringLiteral("宽:")+QString::number(tempWidth)+QStringLiteral("*高:")+QString::number(tempHeight));
 }
 
 MainWindow::~MainWindow()
