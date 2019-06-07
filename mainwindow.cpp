@@ -1,14 +1,16 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-  QMainWindow(parent),
+MainWindow::MainWindow(int argc) :
+  QMainWindow(0),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
   label = new QLabel(this->centralWidget());
   label->setGeometry(QRect(0, 0, 100, 100));
   label->setFocusPolicy(Qt::StrongFocus);
+
+  if (argc == 1) ui->findPathCheck->hide();
 
   connect(ui->genarate_button,SIGNAL(clicked(bool)),this,SLOT(generateNewMaze()));
   connect(ui->findPathCheck,SIGNAL(clicked(bool)),this,SLOT(whetherShowPath()));
