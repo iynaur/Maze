@@ -13,10 +13,10 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 //#define MAZE_DEBUG
 using namespace std;
-//Point类
+//Point
 class Point{
 public:
     int x;
@@ -41,7 +41,6 @@ public:
 };
 
 
-//用于A*寻路算法中储存各节点的信息
 class node{
 public:
     Point parent;
@@ -68,26 +67,28 @@ enum mapStatus{
     inCandidateList,
     inVisitedList
 };
-//用于A*寻路算法 记录坐标到表的映射
+//用于A*寻路算法 记录坐标到表的映射--
 class mapToList{
 public:
-    int index;//在表中的位置
-    int status;//在哪个表中? 0 什么表都不在 1在待定表中 2在已访问表中
+    int index;//在表中的位置--
+    int status;//在哪个表中? 0 什么表都不在 1在待定表中 2在已访问表中--
 };
 
 enum mazeStatus{
     wall,
-    road,//初始的room(红色)
-    standbyArea,//蓝色块
-    visitedRoad//道路(红色)
+    road,//初始的room(红色)--
+    standbyArea,//蓝色块--
+    visitedRoad//道路(红色)--
 };
-//主体---迷宫类
+//主体---迷宫类--
+
 class Maze{
 public:
-    //公用
-    int width;//  \
-              //   >这两个必须是奇数
-    int height;// /
+    //公用--
+
+    int width;//  \--
+              //   >这两个必须是奇数--
+    int height;// /--
     int maze[51][51];
     void generate();
     void generate(int w,int h);
@@ -97,7 +98,7 @@ public:
     Point currentPoint;
     vector<Point> currentToEndPath;
     void showMazeMatrix();
-    //创建迷宫用
+    //创建迷宫用--
     vector<Point> blues;
     Maze(){
       generate(21,15);

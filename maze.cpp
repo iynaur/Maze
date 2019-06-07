@@ -1,6 +1,7 @@
 #include "maze.h"
-
-//把选中的红色块周围的块变成蓝色
+#include <random>
+#include <ctime>
+//把选中的红色块周围的块变成蓝色--
 void Maze::turnBlue(int x, int y){
     maze[x][y]=mazeStatus::visitedRoad;
     //check up
@@ -63,7 +64,7 @@ bool Maze::goodBlue(int bx,int by,Point &linkedRoom){
 
 }
 void Maze::generate(){
-    //初始化maze
+    //初始化maze--
     for(int i=0;i<height;++i)
         for(int j=0;j<width;++j)
             if(i%2&&j%2)
@@ -71,11 +72,11 @@ void Maze::generate(){
             else
                 maze[j][i]=mazeStatus::wall;
     blues.clear();
-    //get random
+    //get random-
     std::default_random_engine random(time(nullptr));
     const int n=(width-1)/2;
     std::uniform_int_distribution<int> dist(0, n-1);
-    //生成迷宫的起始点
+    //生成迷宫的起始点--
     int startX=2*dist(random)+1;
     int startY=height-2;
     turnBlue(startX, startY);
@@ -86,18 +87,19 @@ void Maze::generate(){
         //        cout<<"choosed:"<<choosed<<"size:"<<blues.size()<<endl;
         Point choosedBlue=blues.at(choosed);
 
-        //如果该蓝色块联通着两个房间,把该蓝色块变为3(已访问),然后我们把为1的房间标记为3已访问的房间,再把该房间周围的0块变成蓝色的2块
+        //如果该蓝色块联通着两个房间,把该蓝色块变为3(已访问),--
+        //然后我们把为1的房间标记为3已访问的房间,再把该房间周围的0块变成蓝色的2块--
         Point linkedRoom;
         if(goodBlue(choosedBlue.x, choosedBlue.y,linkedRoom)){
             maze[choosedBlue.x][choosedBlue.y]=mazeStatus::visitedRoad;
             maze[linkedRoom.x][linkedRoom.y]=mazeStatus::visitedRoad;
             turnBlue(linkedRoom.x, linkedRoom.y);
 
-        }else{//如果该蓝色块没有联通任何两个房间,则直接把这个蓝色块变成墙壁0
+        }else{//如果该蓝色块没有联通任何两个房间,则直接把这个蓝色块变成墙壁0--
             maze[choosedBlue.x][choosedBlue.y]=mazeStatus::wall;
         }
 
-        //完成操作,将这个随机选择的蓝色块删除
+        //完成操作,将这个随机选择的蓝色块删除--
         for(auto k=blues.begin();k!=blues.end();++k){
             if(*k==choosedBlue){
                 blues.erase(k);
@@ -108,7 +110,7 @@ void Maze::generate(){
     }
     startPoint.x=startPoint.y=endPoint.y=0;
     endPoint.x=width-1;
-    //设置迷宫的起点
+    //设置迷宫的起点--
     for(;;){
         srand((unsigned)time(nullptr));
         int i=rand()%height;
@@ -118,9 +120,9 @@ void Maze::generate(){
             break;
         }
     }
-    //顺便把当前的位置设为起点
+    //顺便把当前的位置设为起点--
     currentPoint=startPoint;
-    //设置迷宫的终点
+    //设置迷宫的终点--
     for(;;){
         srand((unsigned)time(nullptr));
         int i=rand()%height;
@@ -145,16 +147,16 @@ void Maze::generate(int w, int h){
     generate();
 }
 void Maze::findPath(){
-    //开始自动寻路功能
+    //开始自动寻路功能--
     currentToEndPath.clear();
     vector<node> visited;
     vector<node> candidate;
-    mapToList map[width][height];
+    vector<vector<mapToList>> map(width, vector<mapToList>(height));
     for(int i=0;i<height;++i){
         for(int j=0;j<width;++j)
             map[j][i].status=mapStatus::unreached;
     }
-    node temp;//公用临时变量
+    node temp;//公用临时变量--
 //    map[currentPoint.x][currentPoint.y].status=mapStatus::inVisitedList;
 //    temp.location=currentPoint;
 //    temp.startToMe=0;
@@ -175,11 +177,11 @@ void Maze::findPath(){
         int currentIndex=node::getMinNode(candidate);
         Point current=candidate.at(currentIndex).location;
         if(current==endPoint)break;
-        //下面开始搜索minIndex所在位置四周的点
-        //上
-        //如果是墙壁或者已经访问了则不访问
+        //下面开始搜索minIndex所在位置四周的点--
+        //上--
+        //如果是墙壁或者已经访问了则不访问--
         if(!(current.y-1<0||maze[current.x][current.y-1]==mazeStatus::wall||map[current.x][current.y-1].status==mapStatus::inVisitedList)){
-            //如果不在任何一个表中的话,把他加进待定表中
+            //如果不在任何一个表中的话,把他加进待定表中--
             if(map[current.x][current.y-1].status==mapStatus::unreached){
                 map[current.x][current.y-1].status=mapStatus::inCandidateList;
                 temp.location=Point(current.x,current.y-1);
@@ -190,7 +192,7 @@ void Maze::findPath(){
                 candidate.push_back(temp);
                 map[current.x][current.y-1].status=mapStatus::inCandidateList;
                 map[current.x][current.y-1].index=candidate.size()-1;
-            }else{//如果在的话,更新该节点的数据
+            }else{//如果在的话,更新该节点的数据--
                 int nearIndex=map[current.x][current.y-1].index;
                 if(candidate.at(nearIndex).startToMe>candidate.at(currentIndex).startToMe+1){
                     candidate.at(nearIndex).startToMe=candidate.at(currentIndex).startToMe+1;
@@ -201,9 +203,9 @@ void Maze::findPath(){
             }
         }
         //下
-        //如果是墙壁或者已经访问了则不访问
+        //如果是墙壁或者已经访问了则不访问--
         if(!(current.y+1>=height||maze[current.x][current.y+1]==mazeStatus::wall||map[current.x][current.y+1].status==mapStatus::inVisitedList)){
-            //如果不在任何一个表中的话,把他加进待定表中
+            //如果不在任何一个表中的话,把他加进待定表中--
             if(map[current.x][current.y+1].status==mapStatus::unreached){
                 map[current.x][current.y+1].status=mapStatus::inCandidateList;
                 temp.location=Point(current.x,current.y+1);
@@ -214,7 +216,7 @@ void Maze::findPath(){
                 candidate.push_back(temp);
                 map[current.x][current.y+1].status=mapStatus::inCandidateList;
                 map[current.x][current.y+1].index=candidate.size()-1;
-            }else{//如果在的话,更新该节点的数据
+            }else{//如果在的话,更新该节点的数据--
                 int nearIndex=map[current.x][current.y+1].index;
                 if(candidate.at(nearIndex).startToMe>candidate.at(currentIndex).startToMe+1){
                     candidate.at(nearIndex).startToMe=candidate.at(currentIndex).startToMe+1;
@@ -225,9 +227,9 @@ void Maze::findPath(){
             }
         }
         //左
-        //如果是墙壁或者已经访问了则不访问
+        //如果是墙壁或者已经访问了则不访问--
         if(!(current.x-1<0||maze[current.x-1][current.y]==mazeStatus::wall||map[current.x-1][current.y].status==mapStatus::inVisitedList)){
-            //如果不在任何一个表中的话,把他加进待定表中
+            //如果不在任何一个表中的话,把他加进待定表中--
             if(map[current.x-1][current.y].status==mapStatus::unreached){
                 map[current.x-1][current.y].status=mapStatus::inCandidateList;
                 temp.location=Point(current.x-1,current.y);
@@ -238,7 +240,7 @@ void Maze::findPath(){
                 candidate.push_back(temp);
                 map[current.x-1][current.y].status=mapStatus::inCandidateList;
                 map[current.x-1][current.y].index=candidate.size()-1;
-            }else{//如果在的话,更新该节点的数据
+            }else{//如果在的话,更新该节点的数据--
                 int nearIndex=map[current.x-1][current.y].index;
                 if(candidate.at(nearIndex).startToMe>candidate.at(currentIndex).startToMe){
                     candidate.at(nearIndex).startToMe=candidate.at(currentIndex).startToMe;
@@ -248,10 +250,10 @@ void Maze::findPath(){
                 }
             }
         }
-        //右
-        //如果是墙壁或者已经访问了则不访问
+        //右-
+        //如果是墙壁或者已经访问了则不访问---
         if(!(current.x+1>=width||maze[current.x+1][current.y]==mazeStatus::wall||map[current.x+1][current.y].status==mapStatus::inVisitedList)){
-            //如果不在任何一个表中的话,把他加进待定表中
+            //如果不在任何一个表中的话,把他加进待定表中--
             if(map[current.x+1][current.y].status==mapStatus::unreached){
                 map[current.x+1][current.y].status=mapStatus::inCandidateList;
                 temp.location=Point(current.x+1,current.y);
@@ -262,7 +264,7 @@ void Maze::findPath(){
                 candidate.push_back(temp);
                 map[current.x+1][current.y].status=mapStatus::inCandidateList;
                 map[current.x+1][current.y].index=candidate.size()-1;
-            }else{//如果在的话,更新该节点的数据
+            }else{//如果在的话,更新该节点的数据-
                 int nearIndex=map[current.x+1][current.y].index;
                 if(candidate.at(nearIndex).startToMe>candidate.at(currentIndex).startToMe){
                     candidate.at(nearIndex).startToMe=candidate.at(currentIndex).startToMe;
@@ -272,15 +274,15 @@ void Maze::findPath(){
                 }
             }
         }
-        //访问完毕,更新candidate表的索引值,
+        //访问完毕,更新candidate表的索引值,-
 
-        //把当前节点加入visited表中
+        //把当前节点加入visited表中-
         vector<node>::iterator minP=candidate.begin()+currentIndex;
         map[minP->location.x][minP->location.y].status=mapStatus::inVisitedList;
         visited.push_back(*minP);
         map[minP->location.x][minP->location.y].index=visited.size()-1;
 
-        //从candidate表中移除选择的元素,然后更新candidate表的索引
+        //从candidate表中移除选择的元素,然后更新candidate表的索引-
         candidate.erase(minP);
         for(int i=0;i<candidate.size();++i){
             map[candidate.at(i).location.x][candidate.at(i).location.y].index=i;
@@ -305,7 +307,7 @@ void Maze::findPath(){
         travel=visited.at(map[travel.x][travel.y].index).parent;
     }
 
-    //显示带通道的迷宫
+    //显示带通道的迷宫--
     #ifdef MAZE_DEBUG
     //For Debug Use
     cout<<endl<<endl;
