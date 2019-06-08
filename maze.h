@@ -13,6 +13,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <climits>
 //#include <bits/stdc++.h>
 //#define MAZE_DEBUG
 using namespace std;
